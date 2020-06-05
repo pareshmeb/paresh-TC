@@ -1,0 +1,27 @@
+version: '3.7'
+
+volumes:
+    logs:
+        driver: local
+
+services:
+    db:
+        build: ./postgres
+        restart: always
+        ports:
+            - 5432:5432
+    slim:
+        build: .
+        working_dir: /var/www
+        command: php -S 0.0.0.0:8080 -t public
+        environment:
+            docker: "true"
+        ports:
+            - 8080:8080
+        volumes:
+            - .:/var/www
+            - logs:/var/www/logs
+        depends_on:
+            - db
+    
+
