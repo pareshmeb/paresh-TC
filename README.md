@@ -5,14 +5,17 @@ Installation instruction:
 4) run - composer install
 5) run - docker-compose up
 6) All endpoints returns Json Data. use belows url to test:
-    GET - http://0.0.0.0:8080/topsales
-    GET - http://0.0.0.0:8080/employeeReports/10
-    GET - http://0.0.0.0:8080/employeeSales/10
+    GET - http://127.0.0.1:8080/topsales
+    GET - http://127.0.0.1:8080/employeeReports/10
+    GET - http://127.0.0.1:8080/employeeSales/10
 7) Please navigate to angular folder
 8) do npm install
 9) ng serve --open
+10) If you need to change API ip address then please change in 
+    api.service.ts file
+
 	
-10) Explanation:
+11) Explanation:
     I have created 1 service(sales). 
     Sales service has it's own database so that they can be easily deployed on the separate server.
     It is using the postgreSQL database.
