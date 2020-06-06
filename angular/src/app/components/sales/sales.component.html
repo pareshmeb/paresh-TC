@@ -1,0 +1,37 @@
+<div class="content" role="main">
+    <div *ngIf="salesRecords.length > 0 && isDataLoaded">
+        <div class="tableHeading">
+            <h2>Sales Records of {{employeeName}} </h2>
+            <span><a routerLink="/dashboard">Back</a></span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Date</th>
+                    <th>Measurement Type</th>
+                    <th>Quantity</th>
+                    <th>Sales Price</th>
+                    <th>Total Sales</th>
+                    <th>Cost Price</th>
+                    <th>Gross Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let sales of salesRecords;">
+                    <td>{{ sales.getProductName() }}</td>
+                    <td>{{ sales.getDate() }}</td>
+                    <td>{{ sales.getMeasurementType() }}</td>
+                    <td>{{ sales.getQunatity() }}</td>
+                    <td>{{ sales.getSalesPrice() }}</td>
+                    <td>{{ sales.getTotalSales() }}</td>
+                    <td>{{ sales.getCostPrice() }}</td>
+                    <td>{{ sales.getGrossProfit() }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="!isDataLoaded">
+        <h2>Loading Sales records, Please wait...</h2>
+    </div>
+</div>

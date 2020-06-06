@@ -1,0 +1,46 @@
+<div class="content" role="main">
+    <div *ngIf="topSales.length > 0 && isDataLoaded">
+        <div class="tableHeading">
+            <h2>Top 10 sales</h2>
+            <span>Last Refresh date: {{refreshDate}}  <a (click)="reloadData()">Refresh</a></span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Employee Id</th>
+                    <th>Employee Name</th>
+                    <th>Position</th>
+                    <th>Points</th>
+                    <th>Report</th>
+                    <th>Sales Records</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let topSale of topSales;">
+                    <td>{{ topSale.getEmployeeId() }}</td>
+                    <td>{{ topSale.getEmployeeName() }}</td>
+                    <td>{{ topSale.getPosition() }}</td>
+                    <td>{{ topSale.getPoints() }}</td>
+                    <td><a (click)="getReport(topSale.getEmployeeId())">Show Report</a></td>
+                    <td><a [routerLink]="['/componenets/sales']" [queryParams]="{id: topSale.getEmployeeId(), name: topSale.getEmployeeName()}">Sales</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="!isDataLoaded">
+        <h2>Loading Top 10 Sales, Please wait...</h2>
+    </div>
+    <div class="card-container">
+        <div style="width: 100%" *ngIf="reportDetails && !isLoadingReport">
+            <div><span class="title">Employee Id</span>:        <span class="titleContent">{{reportDetails.getEmployeeId()}}</span></div>
+            <div><span class="title">Employee Name</span>:      <span class="titleContent">{{reportDetails.getEmployeeName()}}</span></div>
+            <div><span class="title">Position</span>:           <span class="titleContent">{{reportDetails.getPosition()}}</span></div>
+            <div><span class="title">Current Week Sales</span>: <span class="titleContent">{{reportDetails.getCurrentWeekSales()}}</span></div>
+            <div><span class="title">Last Week Sales</span>:    <span class="titleContent">{{reportDetails.getLastWeekSales()}}</span></div>
+            <div><span class="title">Change</span>:             <span class="titleContent">{{reportDetails.getChange()}}</span></div>
+        </div>
+        <div *ngIf="isLoadingReport">
+            <h2>Loading Report, Please wait...</h2>
+        </div>
+    </div>
+</div>

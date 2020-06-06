@@ -48,47 +48,60 @@ class EmployeeReportsModel {
             $query = "
                 WITH last_week_sales AS (
                         SELECT 
-                                employee_id, 
+                                employee_id,
                                 sum(qty * sales_amount) AS last_week_sales_amount
                         FROM 
                                 sales
                         WHERE 
+                            employee_id = {$employeeID}
+                        AND
                                 sales_date 
                         BETWEEN
                                 NOW()::DATE-EXTRACT(DOW FROM NOW())::INTEGER-7
                         AND 
                                 NOW()::DATE-EXTRACT(DOW from NOW())::INTEGER-1
-                GROUP BY
-                        employee_id
-                )
+                        GROUP BY
+                                employee_id
+                ), 
+                current_week_sales AS (
+                        SELECT 
+                                employee_id,
+                                sum(qty * sales_amount) AS current_week_sales
+                        FROM 
+                                sales
+                        WHERE 
+                            employee_id = {$employeeID}
+                        AND
+                                sales_date 
+                        BETWEEN
+                                NOW()::DATE-EXTRACT(DOW FROM NOW())::INTEGER
+                        AND 
+                                NOW()::DATE-EXTRACT(DOW from NOW())::INTEGER+6
+                        GROUP BY
+                                employee_id
+                     )
                 SELECT 
+                        e.employee_id,
                         e.employee_name, 
                         p.position_name,
-                        sum(s.qty * s.sales_amount) AS current_week_sales,
-                        (SELECT last_week_sales_amount FROM last_week_sales WHERE employee_id = employee_id) AS last_week_sales_amount
+                        cws.current_week_sales,
+                        lws.last_week_sales_amount
                 FROM 
-                        sales s
-                JOIN
-                        employee e
-                USING 
-                        (employee_id)
+                    employee e  
+                LEFT JOIN
+                    current_week_sales cws
+                USING
+                    (employee_id)
+                LEFT JOIN
+                    last_week_sales lws
+                USING
+                    (employee_id)
                 JOIN
                         position p
                 USING
                         (position_id)
                 WHERE 
-                        s.employee_id = {$employeeID}
-                AND
-                        sales_date 
-                BETWEEN
-                        NOW()::DATE-EXTRACT(DOW FROM NOW())::INTEGER
-                AND 
-                        NOW()::DATE-EXTRACT(DOW from NOW())::INTEGER+6
-                GROUP BY 
-                        e.employee_id, 
-                        p.position_name
-                ORDER BY 
-                        current_week_sales DESC";
+                        e.employee_id = {$employeeID}";
             return $this->db->getAll($query);
         } else {
             return [];
@@ -119,10 +132,11 @@ class EmployeeReportsModel {
                 $lastWeekSales = 0;
             }
             if (isset($employeeSale['current_week_sales'])) {
-                $currentWeekSales = $employeeSale['current_week_sales'];
+                $currentWeekSales = (int) $employeeSale['current_week_sales'];
             } else {
                 $currentWeekSales = 0;
             }
+            $employeeData->employeeId = $employeeSale['employee_id'];
             $employeeData->employeeName = $employeeSale['employee_name'];
             $employeeData->position = $employeeSale['position_name'];
             $employeeData->currentWeekSales = $currentWeekSales;

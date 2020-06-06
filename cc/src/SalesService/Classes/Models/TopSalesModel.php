@@ -106,10 +106,10 @@ class TopSalesModel {
         $returnData = [];
         foreach ($employeeSales as $employeeSale) {
             $employeeData = new \stdClass();
-            $employeeData->employeeId = $employeeSale['employee_id'];
+            $employeeData->employeeId = (int) $employeeSale['employee_id'];
             $employeeData->employeeName = $employeeSale['employee_name'];
             $employeeData->position = $employeeSale['position_name'];
-            $employeeData->points = $employeeSale['points'];
+            $employeeData->points = (int) $employeeSale['points'];
             $returnData[] = $employeeData;
         }
         return $returnData;
