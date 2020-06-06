@@ -17,7 +17,6 @@ class EmployeeReportsController {
      */
     private $container;
     /**
-     * Order model
      * @var object
      */
     private $model;
