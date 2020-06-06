@@ -29,7 +29,8 @@ CREATE TABLE "product" (
 CREATE TABLE "product_cost_price" (
     product_id INTEGER NOT NULL REFERENCES product(product_id)  ON DELETE RESTRICT,
     measurement_type_id INTEGER NOT NULL REFERENCES measurement_type(measurement_type_id)  ON DELETE RESTRICT,
-    cost_price NUMERIC NOT NULL
+    cost_price NUMERIC NOT NULL,
+    PRIMARY KEY(product_id, measurement_type_id)
 );
 
 CREATE TABLE "sales_point" (
@@ -37,7 +38,7 @@ CREATE TABLE "sales_point" (
 );
 
 CREATE TABLE "sales" (
-    sales_id SERIAL,
+    sales_id SERIAL  PRIMARY KEY,
     employee_id INTEGER NOT NULL REFERENCES employee(employee_id) ON DELETE RESTRICT,
     lead_id INTEGER NOT NULL REFERENCES lead(lead_id) ON DELETE RESTRICT,
     product_id INTEGER NOT NULL REFERENCES product(product_id) ON DELETE RESTRICT,

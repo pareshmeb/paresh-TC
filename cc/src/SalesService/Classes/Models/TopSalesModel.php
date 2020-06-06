@@ -45,15 +45,7 @@ class TopSalesModel {
      */
     private function getTopSalesData(): array {
             $query = "
-                WITH product_cost AS (
-                        SELECT 
-                                product_id, 
-                                measurement_type_id, 
-                                cost_price
-                        FROM 
-                                product_cost_price
-                ), 
-                gross_profit_measures AS (
+                WITH gross_profit_measures AS (
                         SELECT 
                                 gross_profit_amount
                         FROM 
@@ -65,7 +57,7 @@ class TopSalesModel {
                         e.employee_id,
                         e.employee_name, 
                         p.position_name,
-                        ((sum(qty * sales_amount) - sum(qty * (select cost_price from product_cost WHERE product_id = product_id and measurement_type_id = measurement_type_id limit 1))) 
+                        ((sum(qty * sales_amount) - sum(qty * pc.cost_price)) 
                           / 
                         (select gross_profit_amount from gross_profit_measures)) AS points
                 FROM 
@@ -78,6 +70,12 @@ class TopSalesModel {
                         position p
                 USING
                         (position_id)
+                JOIN
+                    product_cost_price pc
+                ON
+                        pc.measurement_type_id = s.measurement_type_id 
+                    AND
+                        pc.product_id = s.product_id
                 GROUP BY 
                         e.employee_id, 
                         p.position_name
