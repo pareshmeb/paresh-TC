@@ -105,10 +105,10 @@ export class Sales implements ISales {
     }
 
     getTotalSales(): number {
-        return this.salesPrice;
+        return this.totalSales;
     }
-    setTotalSales(salesPrice: number) {
-        this.salesPrice = salesPrice;
+    setTotalSales(totalSales: number) {
+        this.totalSales = totalSales;
     }
     getCostPrice(): number {
         return this.costPrice;
