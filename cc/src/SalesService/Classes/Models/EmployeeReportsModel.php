@@ -45,6 +45,7 @@ class EmployeeReportsModel {
             $employeeID = $this->args['empID'];
         }
         if (is_numeric($employeeID)) {
+            $this->db->exec("SET TIME ZONE 'Australia/Brisbane'");
             $query = "
                 WITH last_week_sales AS (
                         SELECT 
